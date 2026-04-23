@@ -5,6 +5,11 @@ metadata:
   namespace: {{ .Values.global.namespace }}
 spec:
   gatewayClassName: {{ .Values.gateway.className }}
+  infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+      name: medishift-proxy-config
   listeners:
     - name: http
       port: {{ .Values.gateway.port }}

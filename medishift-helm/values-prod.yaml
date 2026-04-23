@@ -134,3 +134,4 @@ gateway:
 # Network Policies
 networkPolicies:
   enabled: true
+releaseName: medishift-prod
