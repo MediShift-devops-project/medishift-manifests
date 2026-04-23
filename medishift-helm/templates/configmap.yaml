@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: medishift-config
+  namespace: {{ .Values.global.namespace }}
+data:
+  NODE_ENV: {{ .Values.config.nodeEnv }}
+  AUTH_SERVICE_URL: {{ .Values.config.authServiceUrl }}
+  STAFF_SERVICE_URL: {{ .Values.config.staffServiceUrl }}
+  SHIFT_SERVICE_URL: {{ .Values.config.shiftServiceUrl }}
+  LEAVE_SERVICE_URL: {{ .Values.config.leaveServiceUrl }}

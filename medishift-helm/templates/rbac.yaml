@@ -1,0 +1,154 @@
+# Frontend SA
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.frontend.name }}-sa
+  namespace: {{ .Values.global.namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Values.frontend.name }}-role
+  namespace: {{ .Values.global.namespace }}
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.frontend.name }}-rolebinding
+  namespace: {{ .Values.global.namespace }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.frontend.name }}-sa
+    namespace: {{ .Values.global.namespace }}
+roleRef:
+  kind: Role
+  name: {{ .Values.frontend.name }}-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Auth SA
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.auth.name }}-sa
+  namespace: {{ .Values.global.namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Values.auth.name }}-role
+  namespace: {{ .Values.global.namespace }}
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.auth.name }}-rolebinding
+  namespace: {{ .Values.global.namespace }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.auth.name }}-sa
+    namespace: {{ .Values.global.namespace }}
+roleRef:
+  kind: Role
+  name: {{ .Values.auth.name }}-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Staff SA
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.staff.name }}-sa
+  namespace: {{ .Values.global.namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Values.staff.name }}-role
+  namespace: {{ .Values.global.namespace }}
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.staff.name }}-rolebinding
+  namespace: {{ .Values.global.namespace }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.staff.name }}-sa
+    namespace: {{ .Values.global.namespace }}
+roleRef:
+  kind: Role
+  name: {{ .Values.staff.name }}-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Shift SA
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.shift.name }}-sa
+  namespace: {{ .Values.global.namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Values.shift.name }}-role
+  namespace: {{ .Values.global.namespace }}
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.shift.name }}-rolebinding
+  namespace: {{ .Values.global.namespace }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.shift.name }}-sa
+    namespace: {{ .Values.global.namespace }}
+roleRef:
+  kind: Role
+  name: {{ .Values.shift.name }}-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Leave SA
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.leave.name }}-sa
+  namespace: {{ .Values.global.namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Values.leave.name }}-role
+  namespace: {{ .Values.global.namespace }}
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.leave.name }}-rolebinding
+  namespace: {{ .Values.global.namespace }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.leave.name }}-sa
+    namespace: {{ .Values.global.namespace }}
+roleRef:
+  kind: Role
+  name: {{ .Values.leave.name }}-role
+  apiGroup: rbac.authorization.k8s.io

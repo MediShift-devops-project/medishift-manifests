@@ -1,0 +1,116 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateway.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  gatewayClassName: {{ .Values.gateway.className }}
+  listeners:
+    - name: http
+      port: {{ .Values.gateway.port }}
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same
+---
+# Frontend Route
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: medishift-frontend-route
+  namespace: {{ .Values.global.namespace }}
+spec:
+  parentRefs:
+    - name: {{ .Values.gateway.name }}
+      namespace: {{ .Values.global.namespace }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: {{ .Values.frontend.name }}-service
+          port: {{ .Values.frontend.port }}
+---
+# Auth Route
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: medishift-auth-route
+  namespace: {{ .Values.global.namespace }}
+spec:
+  parentRefs:
+    - name: {{ .Values.gateway.name }}
+      namespace: {{ .Values.global.namespace }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/auth
+      backendRefs:
+        - name: {{ .Values.auth.name }}
+          port: {{ .Values.auth.port }}
+---
+# Staff Route
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: medishift-staff-route
+  namespace: {{ .Values.global.namespace }}
+spec:
+  parentRefs:
+    - name: {{ .Values.gateway.name }}
+      namespace: {{ .Values.global.namespace }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/staff
+      backendRefs:
+        - name: {{ .Values.staff.name }}
+          port: {{ .Values.staff.port }}
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/departments
+      backendRefs:
+        - name: {{ .Values.staff.name }}
+          port: {{ .Values.staff.port }}
+---
+# Shift Route
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: medishift-shift-route
+  namespace: {{ .Values.global.namespace }}
+spec:
+  parentRefs:
+    - name: {{ .Values.gateway.name }}
+      namespace: {{ .Values.global.namespace }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/shifts
+      backendRefs:
+        - name: {{ .Values.shift.name }}
+          port: {{ .Values.shift.port }}
+---
+# Leave Route
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: medishift-leave-route
+  namespace: {{ .Values.global.namespace }}
+spec:
+  parentRefs:
+    - name: {{ .Values.gateway.name }}
+      namespace: {{ .Values.global.namespace }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/leaves
+      backendRefs:
+        - name: {{ .Values.leave.name }}
+          port: {{ .Values.leave.port }}

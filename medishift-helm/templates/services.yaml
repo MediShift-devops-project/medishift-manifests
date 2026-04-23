@@ -1,0 +1,69 @@
+# Auth Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.auth.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: {{ .Values.auth.name }}
+  ports:
+    - port: {{ .Values.auth.port }}
+      targetPort: {{ .Values.auth.port }}
+  type: ClusterIP
+---
+# Staff Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.staff.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: {{ .Values.staff.name }}
+  ports:
+    - port: {{ .Values.staff.port }}
+      targetPort: {{ .Values.staff.port }}
+  type: ClusterIP
+---
+# Shift Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.shift.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: {{ .Values.shift.name }}
+  ports:
+    - port: {{ .Values.shift.port }}
+      targetPort: {{ .Values.shift.port }}
+  type: ClusterIP
+---
+# Leave Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.leave.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: {{ .Values.leave.name }}
+  ports:
+    - port: {{ .Values.leave.port }}
+      targetPort: {{ .Values.leave.port }}
+  type: ClusterIP
+---
+# Frontend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.frontend.name }}-service
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: {{ .Values.frontend.name }}
+  ports:
+    - port: {{ .Values.frontend.port }}
+      targetPort: {{ .Values.frontend.port }}
+  type: NodePort

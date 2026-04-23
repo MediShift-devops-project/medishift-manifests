@@ -1,0 +1,349 @@
+# Auth Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.auth.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  replicas: {{ .Values.auth.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.auth.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.auth.name }}
+    spec:
+      serviceAccountName: {{ .Values.auth.name }}-sa
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - until nc -z {{ .Values.postgres.name }} {{ .Values.postgres.port }}; do echo waiting for postgres; sleep 3; done
+      containers:
+        - name: auth-service
+          image: {{ .Values.images.repository }}/{{ .Values.auth.image }}:{{ .Values.auth.tag }}
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.auth.port }}
+          env:
+            - name: PORT
+              value: "{{ .Values.auth.port }}"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: medishift-secrets
+                  key: DATABASE_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: medishift-secrets
+                  key: JWT_SECRET
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: medishift-config
+                  key: NODE_ENV
+            - name: STAFF_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: medishift-config
+                  key: STAFF_SERVICE_URL
+          resources:
+            requests:
+              cpu: {{ .Values.auth.resources.requests.cpu }}
+              memory: {{ .Values.auth.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.auth.resources.limits.cpu }}
+              memory: {{ .Values.auth.resources.limits.memory }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.auth.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.auth.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+---
+# Staff Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.staff.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  replicas: {{ .Values.staff.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.staff.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.staff.name }}
+    spec:
+      serviceAccountName: {{ .Values.staff.name }}-sa
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - until nc -z {{ .Values.postgres.name }} {{ .Values.postgres.port }}; do echo waiting for postgres; sleep 3; done
+      containers:
+        - name: staff-service
+          image: {{ .Values.images.repository }}/{{ .Values.staff.image }}:{{ .Values.staff.tag }}
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.staff.port }}
+          env:
+            - name: PORT
+              value: "{{ .Values.staff.port }}"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: medishift-secrets
+                  key: DATABASE_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: medishift-secrets
+                  key: JWT_SECRET
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: medishift-config
+                  key: NODE_ENV
+            - name: AUTH_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: medishift-config
+                  key: AUTH_SERVICE_URL
+          resources:
+            requests:
+              cpu: {{ .Values.staff.resources.requests.cpu }}
+              memory: {{ .Values.staff.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.staff.resources.limits.cpu }}
+              memory: {{ .Values.staff.resources.limits.memory }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.staff.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.staff.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+---
+# Shift Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.shift.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  replicas: {{ .Values.shift.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.shift.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.shift.name }}
+    spec:
+      serviceAccountName: {{ .Values.shift.name }}-sa
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - until nc -z {{ .Values.postgres.name }} {{ .Values.postgres.port }}; do echo waiting for postgres; sleep 3; done
+      containers:
+        - name: shift-service
+          image: {{ .Values.images.repository }}/{{ .Values.shift.image }}:{{ .Values.shift.tag }}
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.shift.port }}
+          env:
+            - name: PORT
+              value: "{{ .Values.shift.port }}"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: medishift-secrets
+                  key: DATABASE_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: medishift-secrets
+                  key: JWT_SECRET
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: medishift-config
+                  key: NODE_ENV
+            - name: AUTH_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: medishift-config
+                  key: AUTH_SERVICE_URL
+            - name: STAFF_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: medishift-config
+                  key: STAFF_SERVICE_URL
+            - name: LEAVE_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: medishift-config
+                  key: LEAVE_SERVICE_URL
+          resources:
+            requests:
+              cpu: {{ .Values.shift.resources.requests.cpu }}
+              memory: {{ .Values.shift.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.shift.resources.limits.cpu }}
+              memory: {{ .Values.shift.resources.limits.memory }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.shift.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.shift.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+---
+# Leave Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.leave.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  replicas: {{ .Values.leave.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.leave.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.leave.name }}
+    spec:
+      serviceAccountName: {{ .Values.leave.name }}-sa
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - until nc -z {{ .Values.postgres.name }} {{ .Values.postgres.port }}; do echo waiting for postgres; sleep 3; done
+      containers:
+        - name: leave-service
+          image: {{ .Values.images.repository }}/{{ .Values.leave.image }}:{{ .Values.leave.tag }}
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.leave.port }}
+          env:
+            - name: PORT
+              value: "{{ .Values.leave.port }}"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: medishift-secrets
+                  key: DATABASE_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: medishift-secrets
+                  key: JWT_SECRET
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: medishift-config
+                  key: NODE_ENV
+            - name: AUTH_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: medishift-config
+                  key: AUTH_SERVICE_URL
+            - name: SHIFT_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: medishift-config
+                  key: SHIFT_SERVICE_URL
+          resources:
+            requests:
+              cpu: {{ .Values.leave.resources.requests.cpu }}
+              memory: {{ .Values.leave.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.leave.resources.limits.cpu }}
+              memory: {{ .Values.leave.resources.limits.memory }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.leave.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.leave.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+---
+# Frontend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.frontend.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.frontend.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.frontend.name }}
+    spec:
+      serviceAccountName: {{ .Values.frontend.name }}-sa
+      containers:
+        - name: frontend
+          image: {{ .Values.images.repository }}/{{ .Values.frontend.image }}:{{ .Values.frontend.tag }}
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.frontend.port }}
+          resources:
+            requests:
+              cpu: {{ .Values.frontend.resources.requests.cpu }}
+              memory: {{ .Values.frontend.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.frontend.resources.limits.cpu }}
+              memory: {{ .Values.frontend.resources.limits.memory }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.frontend.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.frontend.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
