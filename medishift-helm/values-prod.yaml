@@ -1,10 +1,8 @@
-# Global settings
 global:
   namespace: medishift-prod
   environment: production
   imageTag: latest
 
-# Image settings
 images:
   repository: revanth654
   pullPolicy: Always
@@ -13,7 +11,7 @@ images:
 frontend:
   name: medishift-frontend
   image: medishift-frontend
-  tag: v3
+  tag: v0.0.2
   replicas: 2
   port: 3000
   resources:
@@ -28,7 +26,7 @@ frontend:
 auth:
   name: medishift-auth-service
   image: medishift-auth
-  tag: v2
+  tag: v0.0.4
   replicas: 2
   port: 3001
   resources:
@@ -43,7 +41,7 @@ auth:
 staff:
   name: medishift-staff-service
   image: medishift-staff
-  tag: v2
+  tag: v0.0.3
   replicas: 2
   port: 3002
   resources:
@@ -58,7 +56,7 @@ staff:
 shift:
   name: medishift-shift-service
   image: medishift-shift
-  tag: v2
+  tag: v0.0.2
   replicas: 2
   port: 3003
   resources:
@@ -73,7 +71,7 @@ shift:
 leave:
   name: medishift-leave-service
   image: medishift-leave
-  tag: v2
+  tag: v0.0.2
   replicas: 2
   port: 3004
   resources:
@@ -84,7 +82,6 @@ leave:
       cpu: 500m
       memory: 512Mi
 
-# PostgreSQL
 postgres:
   name: medishift-postgres
   image: postgres
@@ -101,7 +98,6 @@ postgres:
       cpu: 500m
       memory: 512Mi
 
-# ConfigMap
 config:
   nodeEnv: production
   authServiceUrl: http://medishift-auth-service.medishift-prod.svc.cluster.local:3001
@@ -109,15 +105,14 @@ config:
   shiftServiceUrl: http://medishift-shift-service.medishift-prod.svc.cluster.local:3003
   leaveServiceUrl: http://medishift-leave-service.medishift-prod.svc.cluster.local:3004
 
-# Secrets
 secrets:
-  databaseUrl: postgresql://medishift:medishift123@medishift-postgres.medishift-prod.svc.cluster.local:5432/medishift
-  jwtSecret: medishift_jwt_secret_key_2024
-  postgresUser: medishift
-  postgresPassword: medishift123
-  postgresDb: medishift
+  create: true
+  databaseUrl: "postgresql://medishift:medishift123@medishift-postgres.medishift-prod.svc.cluster.local:5432/medishift"
+  jwtSecret: "medishift_jwt_secret_key_2024_prod"
+  postgresUser: "medishift"
+  postgresPassword: "medishift123"
+  postgresDb: "medishift"
 
-# HPA
 hpa:
   enabled: true
   minReplicas: 2
@@ -125,13 +120,11 @@ hpa:
   cpuThreshold: 70
   memoryThreshold: 80
 
-# Gateway
 gateway:
   name: medishift-gateway
   className: eg
   port: 80
 
-# Network Policies
 networkPolicies:
   enabled: true
 releaseName: medishift-prod
