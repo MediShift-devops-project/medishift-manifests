@@ -20,7 +20,9 @@ metadata:
   namespace: {{ .Values.global.namespace }}
 spec:
   parentRefs:
-    - name: {{ .Values.gateway.name }}
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.gateway.name }}
       namespace: {{ .Values.global.namespace }}
   rules:
     - matches:
@@ -28,8 +30,11 @@ spec:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: {{ .Values.frontend.name }}-service
+        - group: ""
+          kind: Service
+          name: {{ .Values.frontend.name }}-service
           port: {{ .Values.frontend.port }}
+          weight: 1
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -38,7 +43,9 @@ metadata:
   namespace: {{ .Values.global.namespace }}
 spec:
   parentRefs:
-    - name: {{ .Values.gateway.name }}
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.gateway.name }}
       namespace: {{ .Values.global.namespace }}
   rules:
     - matches:
@@ -46,8 +53,11 @@ spec:
             type: PathPrefix
             value: /api/auth
       backendRefs:
-        - name: {{ .Values.auth.name }}
+        - group: ""
+          kind: Service
+          name: {{ .Values.auth.name }}
           port: {{ .Values.auth.port }}
+          weight: 1
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -56,7 +66,9 @@ metadata:
   namespace: {{ .Values.global.namespace }}
 spec:
   parentRefs:
-    - name: {{ .Values.gateway.name }}
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.gateway.name }}
       namespace: {{ .Values.global.namespace }}
   rules:
     - matches:
@@ -64,15 +76,21 @@ spec:
             type: PathPrefix
             value: /api/staff
       backendRefs:
-        - name: {{ .Values.staff.name }}
+        - group: ""
+          kind: Service
+          name: {{ .Values.staff.name }}
           port: {{ .Values.staff.port }}
+          weight: 1
     - matches:
         - path:
             type: PathPrefix
             value: /api/departments
       backendRefs:
-        - name: {{ .Values.staff.name }}
+        - group: ""
+          kind: Service
+          name: {{ .Values.staff.name }}
           port: {{ .Values.staff.port }}
+          weight: 1
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -81,7 +99,9 @@ metadata:
   namespace: {{ .Values.global.namespace }}
 spec:
   parentRefs:
-    - name: {{ .Values.gateway.name }}
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.gateway.name }}
       namespace: {{ .Values.global.namespace }}
   rules:
     - matches:
@@ -89,8 +109,11 @@ spec:
             type: PathPrefix
             value: /api/shifts
       backendRefs:
-        - name: {{ .Values.shift.name }}
+        - group: ""
+          kind: Service
+          name: {{ .Values.shift.name }}
           port: {{ .Values.shift.port }}
+          weight: 1
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -99,7 +122,9 @@ metadata:
   namespace: {{ .Values.global.namespace }}
 spec:
   parentRefs:
-    - name: {{ .Values.gateway.name }}
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.gateway.name }}
       namespace: {{ .Values.global.namespace }}
   rules:
     - matches:
@@ -107,5 +132,8 @@ spec:
             type: PathPrefix
             value: /api/leaves
       backendRefs:
-        - name: {{ .Values.leave.name }}
+        - group: ""
+          kind: Service
+          name: {{ .Values.leave.name }}
           port: {{ .Values.leave.port }}
+          weight: 1
