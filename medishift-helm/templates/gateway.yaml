@@ -1,3 +1,25 @@
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: medishift-proxy-config
+  namespace: {{ .Values.global.namespace }}
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyService:
+        type: NodePort
+        patch:
+          type: MergeWithOverwrite
+          value:
+            spec:
+              ports:
+                - name: http
+                  port: 80
+                  protocol: TCP
+                  nodePort: {{ .Values.gateway.nodePort }}
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
@@ -5,6 +27,11 @@ metadata:
   namespace: {{ .Values.global.namespace }}
 spec:
   gatewayClassName: {{ .Values.gateway.className }}
+  infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+      name: medishift-proxy-config
   listeners:
     - name: http
       port: {{ .Values.gateway.port }}

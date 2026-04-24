@@ -124,6 +124,7 @@ gateway:
   name: medishift-gateway
   className: eg
   port: 80
+  nodePort: 31000
 
 networkPolicies:
   enabled: true
