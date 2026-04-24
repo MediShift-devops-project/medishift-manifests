@@ -2,12 +2,16 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: medishift-postgres-{{ .Values.global.environment }}-pv
+  labels:
+    app: medishift-postgres
+    environment: {{ .Values.global.environment }}
 spec:
   capacity:
     storage: {{ .Values.postgres.storage }}
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: medishift-{{ .Values.global.environment }}-storage
   nfs:
     server: {{ .Values.postgres.nfsServer }}
     path: {{ .Values.postgres.nfsPath }}
@@ -20,6 +24,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
+  storageClassName: medishift-{{ .Values.global.environment }}-storage
   resources:
     requests:
       storage: {{ .Values.postgres.storage }}
