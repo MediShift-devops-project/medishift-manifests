@@ -1,10 +1,8 @@
-# Global settings
 global:
   namespace: medishift-dev
   environment: development
   imageTag: latest
 
-# Image settings
 images:
   repository: revanth654
   pullPolicy: Always
@@ -84,7 +82,6 @@ leave:
       cpu: 500m
       memory: 512Mi
 
-# PostgreSQL
 postgres:
   name: medishift-postgres
   image: postgres
@@ -101,7 +98,6 @@ postgres:
       cpu: 500m
       memory: 512Mi
 
-# ConfigMap
 config:
   nodeEnv: development
   authServiceUrl: http://medishift-auth-service.medishift-dev.svc.cluster.local:3001
@@ -109,15 +105,14 @@ config:
   shiftServiceUrl: http://medishift-shift-service.medishift-dev.svc.cluster.local:3003
   leaveServiceUrl: http://medishift-leave-service.medishift-dev.svc.cluster.local:3004
 
-# Secrets
 secrets:
-  databaseUrl: postgresql://medishift:medishift123@medishift-postgres.medishift-dev.svc.cluster.local:5432/medishift
-  jwtSecret: medishift_jwt_secret_key_2024
-  postgresUser: medishift
-  postgresPassword: medishift123
-  postgresDb: medishift
+  create: true
+  databaseUrl: ""
+  jwtSecret: ""
+  postgresUser: ""
+  postgresPassword: ""
+  postgresDb: ""
 
-# HPA
 hpa:
   enabled: true
   minReplicas: 2
@@ -125,12 +120,10 @@ hpa:
   cpuThreshold: 70
   memoryThreshold: 80
 
-# Gateway
 gateway:
   name: medishift-gateway
   className: eg
   port: 80
 
-# Network Policies
 networkPolicies:
   enabled: true
