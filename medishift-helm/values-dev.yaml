@@ -51,7 +51,7 @@ staff:
 shift:
   name: medishift-shift-service
   image: medishift-shift
-  tag: v2
+  tag: v0.0.4-develop.0
   replicas: 2
   port: 3003
   resources:
