@@ -11,7 +11,7 @@ spec:
       envoyService:
         type: NodePort
         patch:
-          type: Strategic
+          type: StrategicMerge
           value:
             spec:
               ports:
