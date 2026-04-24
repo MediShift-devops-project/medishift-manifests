@@ -20,6 +20,20 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: medishift-dev
+
+  ignoreDifferences:
+    - group: ""
+      kind: PersistentVolumeClaim
+      name: medishift-postgres-development-pvc
+      namespace: medishift-dev
+      jsonPointers:
+        - /spec/volumeName
+        - /spec/volumeMode
+        - /status
+        - /metadata/annotations/kubectl.kubernetes.io~1last-applied-configuration
+        - /metadata/annotations/pv.kubernetes.io~1bind-completed
+        - /metadata/finalizers
+
   syncPolicy:
     automated:
       prune: true
