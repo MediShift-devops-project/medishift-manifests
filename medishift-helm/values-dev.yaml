@@ -9,7 +9,7 @@ images:
 frontend:
   name: medishift-frontend
   image: medishift-frontend
-  tag: v0.0.4-develop.0
+  tag: v0.0.5-develop.0
   replicas: 2
   port: 3000
   resources:
@@ -51,7 +51,7 @@ staff:
 shift:
   name: medishift-shift-service
   image: medishift-shift
-  tag: v0.0.4-develop.0
+  tag: v0.0.5-develop.0
   replicas: 2
   port: 3003
   resources:
@@ -65,7 +65,7 @@ shift:
 leave:
   name: medishift-leave-service
   image: medishift-leave
-  tag: v0.0.4-develop.0
+  tag: v0.0.5-develop.0
   replicas: 2
   port: 3004
   resources:
