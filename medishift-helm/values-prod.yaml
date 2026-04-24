@@ -165,7 +165,7 @@ auth:
 staff:
   name: medishift-staff-service
   image: medishift-staff
-  tag: v2
+  tag: v0.0.3
   replicas: 2
   port: 3002
   resources:
