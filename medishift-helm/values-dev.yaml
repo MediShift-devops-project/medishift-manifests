@@ -25,7 +25,7 @@ frontend:
 auth:
   name: medishift-auth-service
   image: medishift-auth
-  tag: v0.0.1-develop.0
+  tag: v0.0.5-develop.0
   replicas: 2
   port: 3001
   resources:
@@ -107,6 +107,7 @@ secrets:
   postgresUser: medishift
   postgresPassword: medishift123
   postgresDb: medishift
+  create: true
 # HPA
 hpa:
   enabled: true
