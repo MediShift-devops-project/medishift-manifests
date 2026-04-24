@@ -39,7 +39,7 @@ auth:
 staff:
   name: medishift-staff-service
   image: medishift-staff
-  tag: v0.0.1
+  tag: v0.0.2
   replicas: 2
   port: 3002
   resources:
