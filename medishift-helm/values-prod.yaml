@@ -151,7 +151,7 @@ frontend:
 auth:
   name: medishift-auth-service
   image: medishift-auth
-  tag: v0.0.2
+  tag: v0.0.3
   replicas: 2
   port: 3001
   resources:
@@ -229,11 +229,11 @@ config:
 # Secrets
 secrets:
   create: true
-  databaseUrl: ""
-  jwtSecret: ""
-  postgresUser: ""
-  postgresPassword: ""
-  postgresDb: ""
+  databaseUrl: "postgresql://medishift:medishift123@medishift-postgres.medishift-prod.svc.cluster.local:5432/medishift"
+  jwtSecret: "medishift_jwt_secret_key_2024_prod"
+  postgresUser: "medishift"
+  postgresPassword: "medishift123"
+  postgresDb: "medishift"
 # HPA
 hpa:
   enabled: true
