@@ -151,7 +151,7 @@ frontend:
 auth:
   name: medishift-auth-service
   image: medishift-auth
-  tag: v0.0.3
+  tag: v0.0.4
   replicas: 2
   port: 3001
   resources:
