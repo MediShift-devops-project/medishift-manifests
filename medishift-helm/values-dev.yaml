@@ -67,7 +67,7 @@ shift:
 leave:
   name: medishift-leave-service
   image: medishift-leave
-  tag: v2
+  tag: v0.0.1-develop.0
   replicas: 2
   port: 3004
   resources:
