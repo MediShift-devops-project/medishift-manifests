@@ -185,6 +185,15 @@ spec:
         - podSelector:
             matchLabels:
               app: {{ .Values.frontend.name }}
+        - podSelector:
+            matchLabels:
+              app: {{ .Values.staff.name }}
+        - podSelector:
+            matchLabels:
+              app: {{ .Values.shift.name }}
+        - podSelector:
+            matchLabels:
+              app: {{ .Values.leave.name }}
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: envoy-gateway-system
@@ -244,6 +253,13 @@ spec:
       ports:
         - protocol: TCP
           port: {{ .Values.postgres.port }}
+    - to:
+        - podSelector:
+            matchLabels:
+              app: {{ .Values.auth.name }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.auth.port }}
     - to:
         - namespaceSelector:
             matchLabels:
