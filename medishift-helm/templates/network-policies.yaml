@@ -301,6 +301,9 @@ spec:
         - podSelector:
             matchLabels:
               app: {{ .Values.auth.name }}
+        - podSelector:
+            matchLabels:
+              app: {{ .Values.leave.name }}
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: envoy-gateway-system
