@@ -8,6 +8,7 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: {{ .Values.postgres.storageClassName }}
   nfs:
     server: {{ .Values.postgres.nfsServer }}
     path: {{ .Values.postgres.nfsPath }}
@@ -23,4 +24,5 @@ spec:
   resources:
     requests:
       storage: {{ .Values.postgres.storage }}
+  storageClassName: {{ .Values.postgres.storageClassName }}
   volumeName: medishift-postgres-{{ .Values.global.environment }}-pv

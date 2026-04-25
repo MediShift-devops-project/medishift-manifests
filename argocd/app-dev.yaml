@@ -27,6 +27,7 @@ spec:
       name: medishift-postgres-development-pvc
       namespace: medishift-dev
       jsonPointers:
+        - /spec/storageClassName
         - /spec/volumeName
         - /spec/volumeMode
         - /status
