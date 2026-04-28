@@ -9,7 +9,7 @@ images:
 frontend:
   name: medishift-frontend
   image: medishift-frontend
-  tag: v0.0.6-develop.1
+  tag: v0.0.6-develop.2
   replicas: 2
   port: 3000
   resources:
